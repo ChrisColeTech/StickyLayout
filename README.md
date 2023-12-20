@@ -4,10 +4,39 @@
 [![Badge w/ Platform](https://cocoapod-badges.herokuapp.com/p/StickyLayout/badge.svg)](https://cocoadocs.org/pods/StickyLayout)
 ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
 
+# New 2023 Update  
+- [X] Added Fixed Footers option
+- [X] Fixed footer will stick to the bottom of the screen, even when there are not enough sections to fill the screen.
+
+## Dynamically Set `fixedFooter` Property
+
+To dynamically set the `fixedFooter` property in your app, you can modify the property value based on some condition or user interaction. Below is an example of how you might toggle the `fixedFooter` property:
+
+```
+// Assume you have a reference to your custom layout
+let customLayout = DSCStickyLayout(stickyConfig: yourStickyConfig)
+
+// Dynamically set `fixedFooter` based on some condition or user interaction
+customLayout.fixedFooter = shouldUseFixedFooter // Replace `shouldUseFixedFooter` with your actual condition
+
+// Assign the custom layout to your collection view
+yourCollectionView.collectionViewLayout = customLayout
+
+// Call reloadData on your collection view to apply the changes
+yourCollectionView.reloadData()
+```
+
+Example:
+ <p float="right">
+    <img src="Art/FixedFooter_2023.gif" float="right">
+  </p>
+
+  ## Usage:
+ 
 <p>
   <p float="left">
-    <img src="https://github.com/jeffreysfllo24/StickyLayout/blob/master/Art/StickyLayout_Calendar.gif" float="top">
-    <img src="https://github.com/jeffreysfllo24/StickyLayout/blob/master/Art/StickyLayout_swimming.gif" float="bottom">
+    <img src="Art/StickyLayout_Calendar.gif" float="top">
+    <img src="Art/StickyLayout_swimming.gif" float="bottom">
   </p>
 
   <p float="right">
