@@ -10,11 +10,12 @@ import Foundation
 import UIKit
 
 open class StickyLayout: UICollectionViewFlowLayout {
-    private let stickyConfig: StickyLayoutConfig
+   private let stickyConfig: StickyLayoutConfig
     private var cellAttrsDict = [IndexPath: UICollectionViewLayoutAttributes]()
     private var cellFramesDict = [IndexPath: CGRect]()
     private var collectionViewContentWidth: CGFloat = 0
     private var collectionViewContentHeight: CGFloat = 0
+    var fixedFooter = true
     
     override open var collectionViewContentSize: CGSize {
         return CGSize(width: collectionViewContentWidth, height: collectionViewContentHeight)
@@ -57,7 +58,8 @@ open class StickyLayout: UICollectionViewFlowLayout {
         // Set Containing current xPos and current yPos for each column
         var xPos: CGFloat = 0
         var yPos: CGFloat = 0
-        
+        var remainingHeight: CGFloat = 0  // Added variable
+
         let bottomStickyRowsSets = stickyConfig.getBottomStickyRows(rowCount: rows)
         
         // Retrieve height of right sticky columns and bottom sticky rows
@@ -83,7 +85,13 @@ open class StickyLayout: UICollectionViewFlowLayout {
                 var stickyRowYPos = yPos
                 if bottomStickyRowsSets.contains(section) {
                     stickyRowYPos = collectionView.frame.height - stickyColHeights
-
+                    if fixedFooter{
+                        // If there are not enough sections to fill the screen, adjust yPos for the last section
+                        remainingHeight = collectionView.frame.height - yPos
+                        if rows > 0 && yPos < collectionView.frame.height {
+                            yPos += remainingHeight
+                        }
+                    }
                     if yPos < stickyRowYPos {
                         stickyRowYPos = yPos
                     }
@@ -96,7 +104,7 @@ open class StickyLayout: UICollectionViewFlowLayout {
                     if xPos < stickyRowXPos {
                         stickyRowXPos = xPos
                     }
-    
+
                     stickyRowWidths[section] = (stickyRowWidths[section] ?? 0) - cellWidth - interItemSpacing
                 }
                 
@@ -114,8 +122,12 @@ open class StickyLayout: UICollectionViewFlowLayout {
             collectionViewContentWidth = max(collectionViewContentWidth, xPos)
             xPos = 0
         }
+
+     
+
         collectionViewContentHeight = yPos
     }
+
     
     private func stickyCellHeights() -> CGFloat {
         var stickyCellHeights: CGFloat = 0
@@ -237,7 +249,7 @@ open class StickyLayout: UICollectionViewFlowLayout {
 }
 
 // MARK: - ZOrdering
-extension StickyLayout {
+extension DSCStickyLayout {
 
     private func zOrder(forRow row: Int, forCol col: Int, stickyRowSet: Set<Int>, stickyColSet: Set<Int>) -> Int {
         if stickyRowSet.contains(row) && stickyColSet.contains(col) {
